@@ -42,7 +42,7 @@ cursor = cnx.cursor()
 
 # execute SQL query using execute() method.
 
-cursor.execute("ALTER TABLE stocks ADD Day2 TEXT;")
+cursor.execute("ALTER TABLE stocks ADD Day3 TEXT;")
 
 # Fetch a single row using fetchone() method.
 
