@@ -93,7 +93,7 @@ def callAPI(url):
         closes.append(price)
 
 
-prepareAPICall("2020", "08", "10")  # hardcoded function call
+prepareAPICall("2020", "08", "08")  # hardcoded function call
 
 dates = slimDate(dates)  # removes zeros
 
@@ -111,9 +111,12 @@ cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Pyth
 
 
 for i in range(len(dates)):  # inserts data row for each closing price and corresponding day
-    message = (
-        "INSERT INTO stocks2(ticker, dateOfPrice, price) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
+    message = ("INSERT INTO stocks2(ticker, dateOfPrice, price) VALUES ('AAPL', '{day}', {price});").format(
+        day=dates[i], price=closes[i])
+    print(message)
     cursor.execute(message)
 
+
+cnx.commit()
 
 cnx.close()  # shuts off cursor and connection
