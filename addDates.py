@@ -17,6 +17,12 @@ def slimDate(datesArray):
     return goodList
 
 
+def fillZeros(integer):
+    sInt = str(integer)
+    sInt = sInt.zfill(2)
+    print(sInt)
+
+
 def datesFromAPI(year, month, day):
     Year = int(year)
     Month = int(month)
@@ -25,9 +31,9 @@ def datesFromAPI(year, month, day):
     tempMonth = Month
     tempDay = Day
     tempDate = ("{year}-{month}-{day}".format(year=str(Year),
-                month=str(Month.zfill(2)), day=str(Day.zfill(2))))
+                month=fillZeros(Month), day=fillZeros(Day)))
     Date = ("{year}-{month}-{day}".format(year=str(Year),
-                                          month=str(Month.zfill(2)), day=str(Day.zfill(2))))
+                                          month=fillZeros(Month), day=fillZeros(Day)))
     for i in range(12):
         tempYear = Year
         tempMonth = Month
@@ -38,9 +44,9 @@ def datesFromAPI(year, month, day):
         else:
             Month = Month - 1
             tempDate = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
-                                                          tMonth=tempMonth.zfill(2), tDay=tempDay.zfill(2))
+                                                          tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
             Date = ("{year}-{month}-{day}").format(year=Year,
-                                                   month=Month.zfill(2), day=Day.zfill(2))
+                                                   month=fillZeros(Month), day=fillZeros(Day))
             callAPI(
                 "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from={DF}&date_to={DT}".format(DF=Date, DT=tempDate))
 
