@@ -1,26 +1,18 @@
 import mysql.connector
 import requests
 import json
+from datetime import date
 dates = []
+tempDates = []
+tempCloses = []
 closes = []
-calls = ["http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2020-08-07&date_to=2020-09-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2020-09-02&date_to=2020-10-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2020-10-02&date_to=2020-11-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2020-11-02&date_to=2020-12-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2020-12-02&date_to=2021-01-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-01-02&date_to=2021-02-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-02-02&date_to=2021-03-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-03-02&date_to=2021-04-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-04-02&date_to=2021-05-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-05-02&date_to=2021-06-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-06-02&date_to=2021-07-01",
-         "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=2021-07-02&date_to=2021-08-05"]
-cnx = mysql.connector.connect(user='root', password='',
-                              host='127.0.0.1',
-                              database='test.db')
 
-# prepare a cursor object using cursor() method
-cursor = cnx.cursor()
+
+today = date.today()
+print(today)
+
+
+"http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=&date_to="
 
 
 def slimDate(datesArray):
@@ -33,35 +25,87 @@ def slimDate(datesArray):
     return goodList
 
 
-for call in calls:
+def fillZeros(integer):
+    sInt = str(integer)
+    sInt = sInt.zfill(2)
+    return(sInt)
+
+
+def datesFromAPI(year, month, day):
+    Year = int(year)
+    Month = int(month)
+    Day = int(day)
+    tempYear = Year
+    tempMonth = Month
+    tempDay = Day
+    tempDate = ("{year}-{month}-{day}".format(year=str(Year),
+                month=fillZeros(Month), day=fillZeros(Day)))
+
+    Date = ("{year}-{month}-{day}".format(year=str(Year),
+                                          month=fillZeros(Month), day=fillZeros(Day)))
+    for i in range(12):
+        tempYear = Year  # 2020
+        tempMonth = Month  # 08
+        tempDay = Day  # 10
+        dayBefore = Day + 1  # 11
+
+        dayFrom = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
+                                                     tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
+
+        if(Month == 12):
+            Month = 1
+            Year = Year + 1
+        else:
+            Month = Month + 1
+
+        dayTo = ("{year}-{month}-{day}").format(year=Year,
+                                                month=fillZeros(Month), day=fillZeros(dayBefore))
+        callAPI(
+            "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo))
+
+
+def callAPI(url):
+    print(url)
     api = requests.get(  # contacts API
-        call
+        url
     )
 
     data = api.text
     parsed_json = json.loads(data)
-
     for x in range(len(parsed_json["data"])):
         date = (
             (parsed_json["data"])[x])["date"]
-        dates.append(date)
+        tempDates.append(date)
         close = ((parsed_json["data"])[x])["close"]
-        closes.append(close)
+        tempCloses.append(close)
+    tempDates.reverse()
+    for date in tempDates:
+        dates.append(date)
+    tempCloses.reverse()
+    for price in tempCloses:
+        closes.append(price)
 
+
+datesFromAPI("2020", "08", "10")
 
 dates = slimDate(dates)
-dates.reverse()
+print(dates[0])
+print(closes[0])
 
-closes.reverse()
 
-for close in closes:
-    print(close)
+cnx = mysql.connector.connect(user='root', password='',
+                              host='127.0.0.1',
+                              database='test.db')
 
-cursor.execute("INSERT INTO stocks")
-for i in range(len(closes)):
-    cursor.execute(
-        "ALTER TABLE stocks ADD `{dateColumn}` TEXT;".format(
-            dateColumn=date))
+
+# prepare a cursor object using cursor() method
+cursor = cnx.cursor()
+
+
+for i in range(len(dates)):
+    message = (
+        "INSERT INTO stocks2(ticker, dateOfPrice, price) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
+    cursor.execute(message)
 
 
 cnx.close()
