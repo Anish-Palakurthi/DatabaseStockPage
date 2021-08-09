@@ -1,10 +1,15 @@
 import mysql.connector
 import requests
 import json
+from datetime import date
 dates = []
 tempDates = []
 tempCloses = []
 closes = []
+
+
+today = date.today()
+print(today)
 
 "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=&date_to="
 
@@ -96,8 +101,9 @@ cnx = mysql.connector.connect(user='root', password='',
 cursor = cnx.cursor()
 
 for i in range(len(dates)):
-    cursor.execute(
-        "INSERT INTO stocks (ticker, date, price) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
+    message = (
+        "INSERT INTO `stocks2` (`ticker`, `dateOfPrice`, `price`) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
+    cursor.execute(message)
 
 
 cnx.close()
