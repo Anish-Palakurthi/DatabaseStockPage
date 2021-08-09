@@ -2,6 +2,8 @@ import mysql.connector
 import requests
 import json
 dates = []
+tempDates = []
+tempCloses = []
 closes = []
 
 "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=&date_to="
@@ -20,7 +22,7 @@ def slimDate(datesArray):
 def fillZeros(integer):
     sInt = str(integer)
     sInt = sInt.zfill(2)
-    print(sInt)
+    return(sInt)
 
 
 def datesFromAPI(year, month, day):
@@ -32,27 +34,31 @@ def datesFromAPI(year, month, day):
     tempDay = Day
     tempDate = ("{year}-{month}-{day}".format(year=str(Year),
                 month=fillZeros(Month), day=fillZeros(Day)))
+
     Date = ("{year}-{month}-{day}".format(year=str(Year),
                                           month=fillZeros(Month), day=fillZeros(Day)))
     for i in range(12):
-        tempYear = Year
-        tempMonth = Month
-        tempDay = Day
-        if(Month == 1):
-            Month = 12
-            Year = Year - 1
+        tempYear = Year  # 2020
+        tempMonth = Month  # 08
+        tempDay = Day  # 10
+        dayBefore = Day + 1  # 11
+
+        dayFrom = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
+                                                     tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
+
+        if(Month == 12):
+            Month = 1
+            Year = Year + 1
         else:
-            Month = Month - 1
-            tempDate = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
-                                                          tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
-            Date = ("{year}-{month}-{day}").format(year=Year,
-                                                   month=fillZeros(Month), day=fillZeros(Day))
-            callAPI(
-                "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from={DF}&date_to={DT}".format(DF=Date, DT=tempDate))
+            Month = Month + 1
+
+        dayTo = ("{year}-{month}-{day}").format(year=Year,
+                                                month=fillZeros(Month), day=fillZeros(dayBefore))
+        callAPI(
+            "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo))
 
 
 def callAPI(url):
-    print("url")
     print(url)
     api = requests.get(  # contacts API
         url
@@ -60,31 +66,25 @@ def callAPI(url):
 
     data = api.text
     parsed_json = json.loads(data)
-    print(data)
-
-
-datesFromAPI("2020", "08", "10")
-
-'''
     for x in range(len(parsed_json["data"])):
         date = (
             (parsed_json["data"])[x])["date"]
-        dates.append(date)
+        tempDates.append(date)
         close = ((parsed_json["data"])[x])["close"]
-        closes.append(close)
+        tempCloses.append(close)
+    tempDates.reverse()
+    for date in tempDates:
+        dates.append(date)
+    tempCloses.reverse()
+    for price in tempCloses:
+        closes.append(price)
 
 
 datesFromAPI("2020", "08", "10")
+
 dates = slimDate(dates)
-dates.reverse()
-closes.reverse()
-
-for date in dates:
-    print(date)
-
-for close in closes:
-    print(close)
-
+print(dates[0])
+print(closes[0])
 
 
 cnx = mysql.connector.connect(user='root', password='',
@@ -95,12 +95,9 @@ cnx = mysql.connector.connect(user='root', password='',
 # prepare a cursor object using cursor() method
 cursor = cnx.cursor()
 
-for date in dates:
+for i in range(len(dates)):
     cursor.execute(
-        "ALTER TABLE stocks ADD `{dateColumn}` TEXT;".format(
-            dateColumn=date))
+        "INSERT INTO stocks (ticker, date, price) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
 
 
 cnx.close()
-
-'''
