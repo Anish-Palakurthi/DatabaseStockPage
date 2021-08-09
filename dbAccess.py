@@ -2,6 +2,8 @@ import mysql.connector
 import requests
 import json
 from datetime import date
+
+
 dates = []
 tempDates = []
 tempCloses = []
@@ -12,10 +14,7 @@ today = date.today()
 print(today)
 
 
-"http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from=&date_to="
-
-
-def slimDate(datesArray):
+def slimDate(datesArray):  # removes trailing zeros on datetime values
     dateList = []
     goodList = []
     for date in datesArray:
@@ -25,13 +24,14 @@ def slimDate(datesArray):
     return goodList
 
 
-def fillZeros(integer):
+def fillZeros(integer):  # formats single digits months and days to have a leading zero for API call
     sInt = str(integer)
     sInt = sInt.zfill(2)
     return(sInt)
 
 
-def datesFromAPI(year, month, day):
+# manages ticking down month by month and then calling API each time
+def prepareAPICall(year, month, day):
     Year = int(year)
     Month = int(month)
     Day = int(day)
@@ -72,40 +72,48 @@ def callAPI(url):
 
     data = api.text
     parsed_json = json.loads(data)
+
+    # adds dates of call to a temporaray dates array
     for x in range(len(parsed_json["data"])):
         date = (
             (parsed_json["data"])[x])["date"]
         tempDates.append(date)
+
+        # adds closing prices of call to a temporaray closes array
         close = ((parsed_json["data"])[x])["close"]
         tempCloses.append(close)
+
+    # reverses data to be in chronological order and then moves temp values to stored set
     tempDates.reverse()
     for date in tempDates:
         dates.append(date)
+
     tempCloses.reverse()
     for price in tempCloses:
         closes.append(price)
 
 
-datesFromAPI("2020", "08", "10")
+prepareAPICall("2020", "08", "10")  # hardcoded function call
 
-dates = slimDate(dates)
+dates = slimDate(dates)  # removes zeros
+
 print(dates[0])
 print(closes[0])
 
 
-cnx = mysql.connector.connect(user='root', password='',
+cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
                               host='127.0.0.1',
                               database='test.db')
 
 
 # prepare a cursor object using cursor() method
-cursor = cnx.cursor()
+cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
 
 
-for i in range(len(dates)):
+for i in range(len(dates)):  # inserts data row for each closing price and corresponding day
     message = (
         "INSERT INTO stocks2(ticker, dateOfPrice, price) VALUES ('AAPL', '{day}', {price});").format(day=dates[i], price=closes[i])
     cursor.execute(message)
 
 
-cnx.close()
+cnx.close()  # shuts off cursor and connection
