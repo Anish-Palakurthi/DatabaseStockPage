@@ -31,7 +31,7 @@ def fillZeros(integer):  # formats single digits months and days to have a leadi
 
 
 # manages ticking down month by month and then calling API each time
-def prepareAPICall(year, month, day):
+def prepareAPICall(year, month, day, company):
     Year = int(year)
     Month = int(month)
     Day = int(day)
@@ -61,7 +61,7 @@ def prepareAPICall(year, month, day):
         dayTo = ("{year}-{month}-{day}").format(year=Year,
                                                 month=fillZeros(Month), day=fillZeros(dayBefore))
         callAPI(
-            "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols=AAPL&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo))
+            "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols={ticker}&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo, ticker=company))
 
 
 def callAPI(url):
@@ -92,13 +92,13 @@ def callAPI(url):
     for price in tempCloses:
         closes.append(price)
 
+    tempCloses.clear()
+    tempDates.clear()
 
-prepareAPICall("2020", "08", "08")  # hardcoded function call
+
+prepareAPICall("2020", "08", "08", "AMZN")  # hardcoded function call
 
 dates = slimDate(dates)  # removes zeros
-
-print(dates[0])
-print(closes[0])
 
 
 cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
@@ -110,11 +110,14 @@ cnx = mysql.connector.connect(user='root', password='',  # connector from Python
 cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
 
 
-for i in range(len(dates)):  # inserts data row for each closing price and corresponding day
-    message = ("INSERT INTO stocks2(ticker, dateOfPrice, price) VALUES ('AAPL', '{day}', {price});").format(
-        day=dates[i], price=closes[i])
-    print(message)
+def executeCursorMessage(company, date, closingPrice):
+    message = ("INSERT INTO stocks2 (ticker, dateOfPrice, price) VALUES ('{ticker}', '{day}', {price});").format(
+        day=dates[i], price=closes[i], ticker=company)
     cursor.execute(message)
+
+
+for i in range(len(dates)):  # inserts data row for each closing price and corresponding day
+    executeCursorMessage('AMZN', dates[i], closes[i])
 
 
 cnx.commit()
