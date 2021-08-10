@@ -1,7 +1,15 @@
 import mysql.connector
 import requests
 import json
-from datetime import date
+
+
+import datetime
+
+
+yearAgo = datetime.datetime.today() - datetime.timedelta(days=365)
+yearAgo = yearAgo.strftime(
+    '%Y-%m-%d')  # format the date to ddmmyyyy
+print(str(yearAgo))
 
 
 dates = []
@@ -10,9 +18,21 @@ tempCloses = []
 closes = []
 
 
-today = date.today()
-print(today)
+cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
+                              host='127.0.0.1',
+                              database='test.db')
 
+
+# prepare a cursor object using cursor() method
+cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
+message = "CREATE TABLE IF NOT EXISTS stocks4 (id  INT   NOT NULL    AUTO_INCREMENT PRIMARY KEY,ticker   TEXT    NOT NULL,dateOfPrice  TEXT NOT NULL,price INT);  "
+
+cursor.excute(message)
+cnx.commit()
+cnx.close()
+
+
+'''
 
 def slimDate(datesArray):  # removes trailing zeros on datetime values
     dateList = []
@@ -107,7 +127,7 @@ cnx = mysql.connector.connect(user='root', password='',  # connector from Python
 
 
 # prepare a cursor object using cursor() method
-cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
+cursor = cnx.cursor() 
 
 
 def executeCursorMessage(company, date, closingPrice):
@@ -123,3 +143,4 @@ for i in range(len(dates)):  # inserts data row for each closing price and corre
 cnx.commit()
 
 cnx.close()  # shuts off cursor and connection
+'''
