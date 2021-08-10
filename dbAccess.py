@@ -2,8 +2,10 @@ import mysql.connector
 import requests
 import json
 
-
+from datetime import date
 import datetime
+today = date.today()
+todayList = today.split("-")
 
 
 yearAgo = datetime.datetime.today() - datetime.timedelta(days=365)
@@ -11,12 +13,15 @@ yearAgo = yearAgo.strftime(
     '%Y-%m-%d')  # format the date to ddmmyyyy
 print(str(yearAgo))
 
+dateListOne = yearAgo.split("-")
 
 dates = []
 tempDates = []
 tempCloses = []
 closes = []
 
+boolean = yearAgo > today
+print(boolean)
 
 cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
                               host='127.0.0.1',
@@ -25,13 +30,27 @@ cnx = mysql.connector.connect(user='root', password='',  # connector from Python
 
 # prepare a cursor object using cursor() method
 cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
-message = "CREATE TABLE IF NOT EXISTS stocks4 (id  INT   NOT NULL    AUTO_INCREMENT PRIMARY KEY,ticker   TEXT    NOT NULL,dateOfPrice  TEXT NOT NULL,price INT);  "
+message = "CREATE TABLE IF NOT EXISTS stocks2 (id  INT   NOT NULL    AUTO_INCREMENT PRIMARY KEY,ticker   TEXT    NOT NULL,dateOfPrice  TEXT NOT NULL,price INT);  "
 
-cursor.excute(message)
+cursor.execute(message)
 cnx.commit()
+
+
+cursor.execute("SELECT*FROM stocks2 ORDER BY  id DESC LIMIT  1;")
+lastRow = cursor.fetchone()
+lastDate = (lastRow[2])
 cnx.close()
 
+dateListTwo = lastDate.split("-")
 
+date1 = datetime.date(int(dateListOne[0]), int(
+    dateListOne[1]), int(dateListOne[2]))
+date2 = datetime.date(int(dateListTwo[0]), int(
+    dateListTwo[1]), int(dateListTwo[2]))
+
+
+isDateOneBefore = date1 < date2
+print(isDateOneBefore)
 '''
 
 def slimDate(datesArray):  # removes trailing zeros on datetime values
@@ -64,10 +83,10 @@ def prepareAPICall(year, month, day, company):
     Date = ("{year}-{month}-{day}".format(year=str(Year),
                                           month=fillZeros(Month), day=fillZeros(Day)))
     for i in range(12):
-        tempYear = Year  # 2020
-        tempMonth = Month  # 08
-        tempDay = Day  # 10
-        dayBefore = Day + 1  # 11
+        tempYear = Year  #
+        tempMonth = Month  #
+        tempDay = Day  #
+        dayBefore = Day + 1  #
 
         dayFrom = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
                                                      tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
@@ -80,8 +99,11 @@ def prepareAPICall(year, month, day, company):
 
         dayTo = ("{year}-{month}-{day}").format(year=Year,
                                                 month=fillZeros(Month), day=fillZeros(dayBefore))
-        callAPI(
-            "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols={ticker}&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo, ticker=company))
+
+        date3 = dateTime.date(Year, Month, dayBefore)
+        if date3 < today:
+            callAPI(
+                "http://api.marketstack.com/v1/eod?access_key=469ed3642bddff1dee77e5b1332ce3b7&symbols={ticker}&date_from={DF}&date_to={DT}".format(DF=dayFrom, DT=dayTo, ticker=company))
 
 
 def callAPI(url):
@@ -116,7 +138,12 @@ def callAPI(url):
     tempDates.clear()
 
 
-prepareAPICall("2020", "08", "08", "AMZN")  # hardcoded function call
+if (isDateOneBefore is True):
+    # hardcoded function call
+    prepareAPICall(dateListTwo[0], dateListTwo[1], dateListTwo[2], "AMZN")
+else:
+    prepareAPICall(dateListOne[0], dateListOne[1], dateListOne[2], "AMZN")
+
 
 dates = slimDate(dates)  # removes zeros
 
@@ -127,7 +154,7 @@ cnx = mysql.connector.connect(user='root', password='',  # connector from Python
 
 
 # prepare a cursor object using cursor() method
-cursor = cnx.cursor() 
+cursor = cnx.cursor()
 
 
 def executeCursorMessage(company, date, closingPrice):
