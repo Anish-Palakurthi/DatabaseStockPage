@@ -1,11 +1,13 @@
 import mysql.connector
 import requests
 import json
+import helperMethods
 
 from datetime import date
 import datetime
-today = date.today()
-todayList = today.split("-")
+
+
+helperMethods.testFunction()
 
 
 yearAgo = datetime.datetime.today() - datetime.timedelta(days=365)
@@ -49,24 +51,9 @@ date2 = datetime.date(int(dateListTwo[0]), int(
     dateListTwo[1]), int(dateListTwo[2]))
 
 
-isDateOneBefore = date1 < date2
-print(isDateOneBefore)
 '''
 
-def slimDate(datesArray):  # removes trailing zeros on datetime values
-    dateList = []
-    goodList = []
-    for date in datesArray:
-        dateList = ((date.split("T")))
-        goodList.append(dateList[0])
 
-    return goodList
-
-
-def fillZeros(integer):  # formats single digits months and days to have a leading zero for API call
-    sInt = str(integer)
-    sInt = sInt.zfill(2)
-    return(sInt)
 
 
 # manages ticking down month by month and then calling API each time
@@ -78,10 +65,10 @@ def prepareAPICall(year, month, day, company):
     tempMonth = Month
     tempDay = Day
     tempDate = ("{year}-{month}-{day}".format(year=str(Year),
-                month=fillZeros(Month), day=fillZeros(Day)))
+                month=helperMethods.fillZeros(Month), day=helperMethods.fillZeros(Day)))
 
     Date = ("{year}-{month}-{day}".format(year=str(Year),
-                                          month=fillZeros(Month), day=fillZeros(Day)))
+                                          month=helperMethods.fillZeros(Month), day=helperMethods.fillZeros(Day)))
     for i in range(12):
         tempYear = Year  #
         tempMonth = Month  #
@@ -89,7 +76,7 @@ def prepareAPICall(year, month, day, company):
         dayBefore = Day + 1  #
 
         dayFrom = ("{tYear}-{tMonth}-{tDay}").format(tYear=tempYear,
-                                                     tMonth=fillZeros(tempMonth), tDay=fillZeros(tempDay))
+                                                     tMonth=helperMethods.fillZeros(tempMonth), tDay=helperMethods.fillZeros(tempDay))
 
         if(Month == 12):
             Month = 1
@@ -98,7 +85,7 @@ def prepareAPICall(year, month, day, company):
             Month = Month + 1
 
         dayTo = ("{year}-{month}-{day}").format(year=Year,
-                                                month=fillZeros(Month), day=fillZeros(dayBefore))
+                                                month=helperMethods.fillZeros(Month), day=helperMethods.fillZeros(dayBefore))
 
         date3 = dateTime.date(Year, Month, dayBefore)
         if date3 < today:
@@ -145,7 +132,7 @@ else:
     prepareAPICall(dateListOne[0], dateListOne[1], dateListOne[2], "AMZN")
 
 
-dates = slimDate(dates)  # removes zeros
+dates = helperMethods.slimDate(dates)  # removes zeros
 
 
 cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
