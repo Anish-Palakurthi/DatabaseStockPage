@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StockPage utilizing Database</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-
+    <script src="index.js"></script>
     <!--import for Chart.js-->
 
 
@@ -48,36 +48,8 @@
             const inputS1 = document.getElementById("s1").value;
             const inputS2 = document.getElementById("s2").value;
 
-            //const mysql = require("mysql");
-            import mysql from 'mysql';
-
-            connect();
-            async function connect() {
-
-                try {
-                    const con = await mysql.createConnection({
-                        "host": "127.0.0.1",
-                        "user": "root",
-                        "password": "",
-                        "database": "test.db"
-
-                    });
 
 
-                    const result1 = await con.query(`SELECT * FROM stocks2 WHERE ticker = '${inputS1}'';`);
-                    console.table(result1[0]);
-
-                    const result2 = await con.query(`SELECT * FROM stocks2 WHERE ticker = '${inputS2}'';`);
-                    console.table(result2[0]);
-                }
-
-
-
-                catch (err) {
-                    console.error(err);
-                }
-
-            }
         }
 
     </script>
