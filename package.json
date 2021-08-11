@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/Anish-Palakurthi/dbFunEx/issues"
   },
-  "homepage": "https://github.com/Anish-Palakurthi/dbFunEx#readme"
+  "homepage": "https://github.com/Anish-Palakurthi/dbFunEx#readme",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.0"
+  }
 }
