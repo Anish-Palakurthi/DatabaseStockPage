@@ -1,4 +1,5 @@
-def slimDate(datesArray):  # removes trailing zeros on datetime values
+# removes trailing zeros on datetime array
+def slimDate(datesArray):
     dateList = []
     goodList = []
     for date in datesArray:
@@ -8,11 +9,8 @@ def slimDate(datesArray):  # removes trailing zeros on datetime values
     return goodList
 
 
-def fillZeros(integer):  # formats single digits months and days to have a leading zero for API call
+# formats single digits months and days to have a leading zero for API call (8 -> 08)
+def fillZeros(integer):
     sInt = str(integer)
     sInt = sInt.zfill(2)
     return(sInt)
-
-
-def testFunction():
-    print("files are connected")

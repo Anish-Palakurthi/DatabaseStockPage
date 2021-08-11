@@ -1,13 +1,19 @@
+# connector for Python->MySQL
 import mysql.connector
+
+# necessary for API call
 import requests
+
+# necessary to handle API return
 import json
+
+# imports assistance methods from other file
 import helperMethods
 
+
+# allows us to access current date and create date objects
 from datetime import date
 import datetime
-
-
-helperMethods.testFunction()
 
 
 yearAgo = datetime.datetime.today() - datetime.timedelta(days=365)
@@ -25,19 +31,28 @@ closes = []
 boolean = yearAgo > today
 print(boolean)
 
-cnx = mysql.connector.connect(user='root', password='',  # connector from Python to MySQL
+
+# connector to specific database
+cnx = mysql.connector.connect(user='root', password='',
                               host='127.0.0.1',
                               database='test.db')
 
 
-# prepare a cursor object using cursor() method
-cursor = cnx.cursor()  # cursor object allows us to run MySQL commands from Python script
+# cursor object allows us to run MySQL commands from Python script
+cursor = cnx.cursor()
+
+# determines if table exists and if it doesn't, creates appropriate table
 message = "CREATE TABLE IF NOT EXISTS stocks2 (id  INT   NOT NULL    AUTO_INCREMENT PRIMARY KEY,ticker   TEXT    NOT NULL,dateOfPrice  TEXT NOT NULL,price INT);  "
 
+
+# send command through to database
 cursor.execute(message)
+
+# saves changes to all users of database
 cnx.commit()
 
 
+# fetches date of last record from database
 cursor.execute("SELECT*FROM stocks2 ORDER BY  id DESC LIMIT  1;")
 lastRow = cursor.fetchone()
 lastDate = (lastRow[2])
