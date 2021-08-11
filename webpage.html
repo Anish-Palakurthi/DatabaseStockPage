@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>StockPage utilizing Database</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+
+
+
+
+</head>
+
+<body>
+    <form>
+        <label>Enter Start Date (Must be within the last year in YYYY-MM-DD): </label>
+        <input type="text" placeholder="2021-01-01" id="Date">
+        <br>
+        <label>Enter First Stock Symbol: </label>
+        <input type="text" placeholder="Stock 1" id="s1">
+        <br>
+        <label>Enter Second Stock Symbol: </label>
+        <input type="text" placeholder="Stock 2" id="s2">
+        <br>
+        <p>Sample Stock Tickers: AAPL, TSLA, GOOG, FB, MSFT</p>
+        <button type="button" onclick="getInputValue(); ">Submit</button>
+    </form>
+
+    <div><canvas id="myChart"></canvas></div>
+
+    <script>
+        var dates = [];
+        var closes1 = [];
+        var closes2 = [];
+        var infoStored;
+
+        function getInputValue() {
+            // Selecting the input element and get its value 
+
+            var inputDate = document.getElementById("Date").value;
+            var inputS1 = document.getElementById("s1").value;
+            var inputS2 = document.getElementById("s2").value;
+
+
+
+
+
+
+
+
+
+
+            function createChart(combinedArray) {
+                let myChart = document.getElementById("myChart").getContext("2d");
+                new Chart(document.getElementById("myChart"), {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: "Closing Prices for " + inputS1,
+                                data: closes1,
+                                borderColor: "#009900"
+                            },
+                            {
+                                label: "Closing Prices for " + inputS2,
+                                data: closes2,
+                                borderColor: "#0066CC"
+
+                            }
+
+
+                        ]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: "Price of Share ($) for " + inputS1 + "(Green) vs " + inputS2 + " (Blue)"
+
+                        }
+                    }
+                });
+            }
+
+
+
+        }
+    </script>
+
+
+
+
+</body>
+
+</html>
