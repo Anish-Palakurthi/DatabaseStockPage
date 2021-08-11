@@ -1,0 +1,19 @@
+{
+  "name": "dbfunex",
+  "version": "1.0.0",
+  "description": "retrieves stock price data from MySQL database and uses Chart.js to graphically present data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anish-Palakurthi/dbFunEx.git"
+  },
+  "author": "Anish Palakurthi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anish-Palakurthi/dbFunEx/issues"
+  },
+  "homepage": "https://github.com/Anish-Palakurthi/dbFunEx#readme"
+}

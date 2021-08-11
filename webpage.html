@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StockPage utilizing Database</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <!--import for Chart.js-->
 
 
 
@@ -31,6 +32,8 @@
 
     <div><canvas id="myChart"></canvas></div>
 
+
+
     <script>
         var dates = [];
         var closes1 = [];
@@ -46,6 +49,7 @@
 
 
 
+            //formats and creates Chart and then makes it visible
             function createChart(combinedArray) {
                 let myChart = document.getElementById("myChart").getContext("2d");
                 new Chart(document.getElementById("myChart"), {
