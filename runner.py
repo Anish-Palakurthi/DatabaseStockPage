@@ -17,21 +17,20 @@ app = Flask(__name__)
 @app.route("/", methods=["POST", "GET"])
 def home():
     if (request.method == "POST"):
-        datePrime = request.form["Date"]
 
         stock1Prime = request.form["s1"]
 
         stock2Prime = request.form["s2"]
 
-        return redirect(url_for("chart", date=datePrime, stock1=stock1Prime, stock2=stock2Prime))
+        return redirect(url_for("sqlconnect", stock1=stock1Prime, stock2=stock2Prime))
 
     else:
 
         return render_template("webpage.html")
 
 
-@app.route("/chart/<string:date>/<string:stock1>/<string:stock2>", methods=["POST", "GET"])
-def chart(date, stock1, stock2):
+@app.route("/sqlconnect/<string:stock1>/<string:stock2>", methods=["POST", "GET"])
+def sqlconnect(stock1, stock2):
 
     cnx = mysql.connector.connect(user='root', password='',
                                   host='127.0.0.1',
@@ -52,7 +51,7 @@ def chart(date, stock1, stock2):
     for result in results:
         closes2.append(result[3])
 
-    return(date + stock1 + stock2)
+    return(render_template("webpage.html", dateList=dates, stockList1=closes1, stockList2=closes2))
 
 
 if __name__ == "__main__":

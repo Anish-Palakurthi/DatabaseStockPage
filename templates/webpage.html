@@ -19,9 +19,6 @@
 
 
     <form action="#" method="POST">
-        <label>Enter Start Date (Must be within the last year in YYYY-MM-DD): </label>
-        <input type="text" placeholder="2021-01-01" name="Date">
-        <br>
         <label>Enter First Stock Symbol: </label>
         <input type="text" placeholder="Stock 1" name="s1">
         <br>
@@ -29,8 +26,15 @@
         <input type="text" placeholder="Stock 2" name="s2">
         <br>
         <p>Sample Stock Tickers: AAPL, TSLA, GOOG, FB, MSFT</p>
-        <button type="submit" onclick="getInputValue(); ">Submit</button>
+        <button type="submit">Submit</button>
     </form>
+
+    <button onclick="showChart();">See Chart!</button>
+
+    <!--<div id=" dates" style="display:none"> {{dateList}}</div> -->
+    <div id=" dates"> {{dateList}}</div>
+    <div id="closes1" style="display: none">{{stockList1}}</div>
+    <div id="closes2" style="display: none">{{stockList2}}</div>
 
     <div><canvas id="myChart"></canvas></div>
 
@@ -39,19 +43,15 @@
     <script>
 
 
-        var dates = [];
-        var closes1 = [];
-        var closes2 = [];
-        var infoStored;
+        // Selecting the input element and get its value 
+        function showChart() {
+            const dateArr = document.getElementById("dates");
+            const c1Arr = document.getElementById("closes1");
+            const c2Arr = document.getElementById("closes2");
 
-        function getInputValue() {
-            // Selecting the input element and get its value 
-
-            const inputDate = document.getElementById("Date").value;
-            const inputS1 = document.getElementById("s1").value;
-            const inputS2 = document.getElementById("s2").value;
-
-            //post inputs to web server 
+            console.log(dateArr);
+        }
+            //post inputs to web server
 
             //parse post to get variables
 
@@ -70,7 +70,6 @@
 
 
 
-        }
 
 
 
