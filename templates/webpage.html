@@ -31,10 +31,8 @@
 
     <button onclick="showChart();">See Chart!</button>
 
-    <!--<div id=" dates"> {{dateList}}</div> -->
-    <div id=" dates"> hello</div>
-    <div id="closes1" style="display: none">{{stockList1}}</div>
-    <div id="closes2" style="display: none">{{stockList2}}</div>
+
+
 
     <div><canvas id="myChart"></canvas></div>
 
@@ -42,20 +40,11 @@
 
     <script>
 
-        window.onload = function () {
-            alert(document.getElementById("dates"));
-        };
-        // Selecting the input element and get its value 
-        function showChart() {
+        var dateString = '{{dateList}}';
+        var closes1String = '{{stockList1}}';
+        var closes2String = '{{stockList2}}';
 
-
-            const dateArr = document.getElementById("dates").textContent;
-            const c1Arr = document.getElementById("closes1").textContent;
-            const c2Arr = document.getElementById("closes2").textContent;
-
-            console.log(c1Arr);
-
-        }
+        console.log(dateString);
             //post inputs to web server
 
             //parse post to get variables
