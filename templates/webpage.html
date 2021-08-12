@@ -18,18 +18,18 @@
 <body>
 
 
-    <form action="/inputsSubmited" method="POST">
+    <form action="#" method="POST">
         <label>Enter Start Date (Must be within the last year in YYYY-MM-DD): </label>
-        <input type="text" placeholder="2021-01-01" id="Date">
+        <input type="text" placeholder="2021-01-01" name="Date">
         <br>
         <label>Enter First Stock Symbol: </label>
-        <input type="text" placeholder="Stock 1" id="s1">
+        <input type="text" placeholder="Stock 1" name="s1">
         <br>
         <label>Enter Second Stock Symbol: </label>
-        <input type="text" placeholder="Stock 2" id="s2">
+        <input type="text" placeholder="Stock 2" name="s2">
         <br>
         <p>Sample Stock Tickers: AAPL, TSLA, GOOG, FB, MSFT</p>
-        <button type="button" onclick="getInputValue(); ">Submit</button>
+        <button type="submit" onclick="getInputValue(); ">Submit</button>
     </form>
 
     <div><canvas id="myChart"></canvas></div>
