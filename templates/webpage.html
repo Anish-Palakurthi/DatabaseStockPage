@@ -17,7 +17,7 @@
 
 <body>
 
-
+    <p>Enter Two Stock Ticker Symbols and then click Submit to see their share progression over the last year</p>
     <form action="#" method="POST">
         <label>Enter First Stock Symbol: </label>
         <input type="text" placeholder="Stock 1" name="s1">
@@ -83,12 +83,6 @@
         const closes2 = numsToArray(closes2String);
 
 
-        console.log(datesArr);
-
-        console.log(closes1);
-
-        console.log(closes2);
-
         let myChart = document.getElementById("myChart").getContext("2d");
         new Chart(document.getElementById("myChart"), {
             type: 'line',
@@ -96,12 +90,12 @@
                 labels: datesArr,
                 datasets: [
                     {
-                        label: "Closing Prices for ",
+                        label: "Closing Prices for Stock 1",
                         data: closes1,
                         borderColor: "#009900"
                     },
                     {
-                        label: "Closing Prices for ",
+                        label: "Closing Prices for Stock 2",
                         data: closes2,
                         borderColor: "#0066CC"
 
@@ -114,7 +108,7 @@
                 legend: { display: false },
                 title: {
                     display: true,
-                    text: "Price of Share ($) for " + "(Green) vs " + " (Blue)"
+                    text: "Price of Share ($) for Stock 1(Green) vs Stock 2 (Blue)"
 
                 }
             }
