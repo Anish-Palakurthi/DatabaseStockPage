@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Anish-Palakurthi/dbFunEx#readme",
   "dependencies": {
     "mysql": "^2.18.1",
-    "mysql2": "^2.3.0"
+    "mysql2": "^2.3.0",
+    "papaparse": "^5.3.1"
   }
 }

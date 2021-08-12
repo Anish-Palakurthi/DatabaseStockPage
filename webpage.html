@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>StockPage utilizing Database</title>
+    <title>StockPage Utilizing Database</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <script src="index.js"></script>
     <!--import for Chart.js-->
 
 
@@ -17,7 +16,9 @@
 </head>
 
 <body>
-    <form>
+
+
+    <form action="/inputsSubmited" method="POST">
         <label>Enter Start Date (Must be within the last year in YYYY-MM-DD): </label>
         <input type="text" placeholder="2021-01-01" id="Date">
         <br>
@@ -36,6 +37,8 @@
 
 
     <script>
+
+
         var dates = [];
         var closes1 = [];
         var closes2 = [];
@@ -48,9 +51,30 @@
             const inputS1 = document.getElementById("s1").value;
             const inputS2 = document.getElementById("s2").value;
 
+            //post inputs to web server 
+
+            //parse post to get variables
+
+            //send variables to python process variables
+
+            //return array data of selected inputs to the web page
+
+            //plot chart with array data
+
+
+
+
+
+
+
+
 
 
         }
+
+
+
+
 
     </script>
 
