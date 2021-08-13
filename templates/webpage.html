@@ -31,11 +31,10 @@
 
     <script>
 
-        //{{}} strings are filled by the parameters returned by the flask redirect in runner.py 
+        // strings are filled by the parameters returned by the flask redirect in runner.py 
         var dateString = '{{dateList}}';
         var closes1String = '{{stockList1}}';
         var closes2String = '{{stockList2}}';
-
 
         //converts string of comma separated dates to an array to be used for chart
         function datesToArray(dString) {

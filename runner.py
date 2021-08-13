@@ -57,6 +57,11 @@ def sqlconnect(stock1, stock2):
 
     # stores rows from SELECT line in results array
     results = cursor.fetchall()
+
+    dates.clear()
+    closes1.clear()
+    closes2.clear()
+
     for result in results:
 
         # adds closing price and date for each day to arrays
