@@ -9,14 +9,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <!--import for Chart.js-->
 
-
-
-
-
 </head>
 
 <body>
-
+    <!--main form of webpage-->
     <p>Enter Two Stock Ticker Symbols and then click Submit to see their share progression over the last year</p>
     <form action="#" method="POST">
         <label>Enter First Stock Symbol: </label>
@@ -30,20 +26,18 @@
     </form>
 
 
-
-
-
+    <!--empty div to attach to chart object later on-->
     <div><canvas id="myChart"></canvas></div>
-
-
 
     <script>
 
+        //{{}} strings are filled by the parameters returned by the flask redirect in runner.py 
         var dateString = '{{dateList}}';
         var closes1String = '{{stockList1}}';
         var closes2String = '{{stockList2}}';
 
 
+        //converts string of comma separated dates to an array to be used for chart
         function datesToArray(dString) {
             rList = [];
             returnList = [];
@@ -64,6 +58,7 @@
             return (returnList);
         }
 
+        //converts string of closing prices to an array to be used as dataset for chart
         function numsToArray(nString) {
             nList = nString.split(",");
             returnList = [];
@@ -76,13 +71,15 @@
 
         }
 
+
+        //calls functions on strings and then stores them as arrays
         const datesArr = datesToArray(dateString);
 
         const closes1 = numsToArray(closes1String);
 
         const closes2 = numsToArray(closes2String);
 
-
+        //attaches chart object to the canvas div above
         let myChart = document.getElementById("myChart").getContext("2d");
         new Chart(document.getElementById("myChart"), {
             type: 'line',
@@ -100,8 +97,6 @@
                         borderColor: "#0066CC"
 
                     }
-
-
                 ]
             },
             options: {
@@ -115,36 +110,7 @@
         });
 
 
-
-
-
-        //post inputs to web server
-
-        //parse post to get variables
-
-        //send variables to python process variables
-
-        //return array data of selected inputs to the web page
-
-        //plot chart with array data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </script>
-
-
-
 
 </body>
 
